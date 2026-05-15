@@ -1,0 +1,27 @@
+Ejercicio 1 - Leyes de De Morgan (de_morgan1 y de_morgan2)
+Modelo de IA utilizado: Claude (Replit Agent / Anthropic)
+Prompt: "Escribe en Zilly las dos leyes de De Morgan como funciones. de_morgan1 representa NOT(P AND Q) = (NOT P) OR (NOT Q), y de_morgan2 representa NOT(P OR Q) = (NOT P) AND (NOT Q)."
+
+---
+
+Ejercicio 2 - Sucesor (succ)
+Modelo de IA utilizado: Claude (Replit Agent / Anthropic)
+Prompt: "Define en Zilly una funcion llamada succ que reciba un entero z y retorne z + 1, usando las operaciones disponibles en el lenguaje como sub, lt e if."
+
+---
+
+Ejercicio 3 - Promedio y Varianza (mean y variance)
+Modelo de IA utilizado: Claude (Replit Agent / Anthropic)
+Prompt: "Implementa las funciones mean y variance en C++ que calculen el promedio y la varianza muestral (usando n-1) de un vector de doubles."
+
+---
+
+Ejercicio 4 - Coeficiente de Correlacion de Pearson (pearson_r)
+Modelo de IA utilizado: Claude (Replit Agent / Anthropic)
+Prompt: "Implementa una funcion llamada pearson_r que reciba dos vectores de doubles A y B y calcule el coeficiente de correlacion de Pearson entre ellos, usando la formula estandar con medias, diferencias y producto de raices de sumas de cuadrados."
+
+---
+
+Ejercicio 5 - Conversion de Bases (Septapus, Octopus, Hexakaidecapus)
+Modelo de IA utilizado: Claude (Replit Agent / Anthropic)
+Prompt: "Implementa las 12 funciones de conversion entre los sistemas numericos de base 7 (Septapus Mirabilis), base 8 (Octopus Sapiens) y base 16 (Hexakaidecapus Turingia), respetando exactamente las firmas provistas en el enunciado. Usa decimal como base puente para las conversiones cruzadas."
