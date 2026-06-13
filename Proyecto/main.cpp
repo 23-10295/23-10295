@@ -1,6 +1,6 @@
 #include "cargador.h"
 #include "kmeans.h"
-#include "escritor.h" // <--- Nuevo enlace de salida
+#include "escritor.h" 
 #include <iostream>
 #include <string>
 
@@ -31,21 +31,17 @@ int main(int argc, const char *argv[]) {
 
     const auto& datos = BaseDatos::obtener_datos();
     
-    // Ejecución del motor algorítmico
     std::vector<Centroide> centroides_finales;
     std::vector<PuntoClasificado> puntos_procesados = MotorKMeans::ejecutar(k, datos, centroides_finales);
 
-    // Evaluación métrica
     double metrica_dispersion = MotorKMeans::calcular_dispersion_total(puntos_procesados, centroides_finales);
     std::cout << "Medida de Dispersion Total (Inercia SSE): " << metrica_dispersion << std::endl;
     std::cout << "------------------------------------" << std::endl;
 
-    // Generación automatizada de los archivos exigidos por la empresa
     if (!EscritorResultados::guardar_puntos_clasificados("clasificados.csv", puntos_procesados)) {
         return 1;
     }
     
- // Le pasamos 'puntos_procesados' en lugar de la dispersión total
     if (!EscritorResultados::guardar_resumen("summary.txt", centroides_finales, puntos_procesados)) {
         return 1;
     }
