@@ -17,7 +17,7 @@ bool EscritorResultados::guardar_puntos_clasificados(const std::string& filename
         archivo << punto.coordenadas.x << ","
                 << punto.coordenadas.y << ","
                 << punto.coordenadas.z << ","
-                << punto.cluster_asignado << "\n"; // Salto de línea estricto
+                << punto.cluster_asignado << "\n"; 
     }
 
     std::cout << "Archivo '" << filename << "' generado exitosamente con " << puntos.size() << " registros." << std::endl;
@@ -41,7 +41,6 @@ bool EscritorResultados::guardar_resumen(const std::string& filename, const std:
         for (const auto& punto : puntos) {
             if (punto.cluster_asignado == centroide.etiqueta) {
                 N++;
-                // Usamos la función pública que ya tenías en K-Means para calcular la distancia
                 double dist = MotorKMeans::calcular_distancia(punto.coordenadas, centroide.posicion);
                 MD_cluster += (dist * dist);
             }
