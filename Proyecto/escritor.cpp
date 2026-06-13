@@ -1,7 +1,7 @@
 #include "escritor.h"
 #include <fstream>
 #include <iostream>
-#include <iomanip> // Para fijar el número de decimales en la salida
+#include <iomanip> 
 
 bool EscritorResultados::guardar_puntos_clasificados(const std::string& filename, const std::vector<PuntoClasificado>& puntos) {
     std::ofstream archivo(filename);
