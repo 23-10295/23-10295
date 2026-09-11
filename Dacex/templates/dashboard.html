@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Académico - DACEX</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+
+    <!-- FONDO OSCURO DE ENFOQUE AL ABRIR EL MENÚ -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MENÚ LATERAL DESPLEGABLE -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-title">DACEX Menú</span>
+            <button class="close-btn" id="closeSidebar" title="Cerrar menú">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+    <ul>
+        <li>
+            <a href="{{ url_for('dashboard') }}"><i class="fa-solid fa-house"></i> Inicio / Perfil</a>
+        </li>
+        <li>
+            <a href="{{ url_for('oferta') }}"><i class="fa-solid fa-book-open"></i> Oferta académica trimestre sep-dic</a>
+        </li>
+        <li>
+            <a href="{{ url_for('materias_pasadas') }}"><i class="fa-solid fa-circle-check"></i> Materias pasadas</a>
+        </li>
+        <li>
+            <a href="{{ url_for('materias_por_pasar') }}"><i class="fa-solid fa-clock"></i> Materias por pasar</a>
+        </li>
+        <li>
+            <a href="{{ url_for('pensum') }}"><i class="fa-solid fa-graduation-cap"></i> Pensum académico</a>
+        </li>
+        <li>
+            <a href="{{ url_for('estado_inscripcion') }}"><i class="fa-solid fa-clipboard-list"></i> Estado de inscripción</a>
+        </li>
+    </ul>
+</nav>
+    </aside>
+
+    <!-- BARRA SUPERIOR QUE OCUPA TODO EL ANCHO -->
+    <header class="navbar">
+        <div class="navbar-left">
+            <button class="menu-btn" id="openSidebar" title="Menú principal">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="navbar-center">
+            <span class="brand-name">DACEX</span>
+        </div>
+        
+        <div class="navbar-right">
+            <div class="index-badge">
+                <span class="index-title">ÍNDICE ACADÉMICO</span>
+                <div class="index-number">
+                    <i class="fa-solid fa-star"></i>
+                    <span>{{ indice }}</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENIDO CENTRAL -->
+    <main class="dashboard-container">
+        <div class="welcome-card">
+            <h1>Bienvenido a tu perfil académico</h1>
+            <p class="student-name">{{ nombre }} ({{ carnet }})</p>
+            <p class="student-career"><i class="fa-solid fa-graduation-cap"></i> {{ carrera }}</p>
+            
+            <div class="hero-image">
+                <svg width="260" height="200" viewBox="0 0 300 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="40" width="260" height="160" rx="16" fill="#1e293b"/>
+                    <rect x="40" y="60" width="220" height="120" rx="8" fill="#0f172a"/>
+                    <path d="M150 75 L210 105 L150 135 L90 105 Z" fill="#3b82f6"/>
+                    <path d="M110 118 V140 C110 155 190 155 190 140 V118" stroke="#60a5fa" stroke-width="4" fill="none"/>
+                    <circle cx="150" cy="180" r="10" fill="#38bdf8"/>
+                </svg>
+            </div>
+        </div>
+    </main>
+
+    <!-- BOTÓN INFERIOR DERECHO (CERRAR SESIÓN) -->
+    <a href="/logout" class="logout-btn" title="Cerrar Sesión">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Cerrar Sesión</span>
+    </a>
+
+    <!-- SCRIPT JS PARA ABRIR Y CERRAR EL MENÚ -->
+    <script>
+        const openBtn = document.getElementById('openSidebar');
+        const closeBtn = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        openBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+    </script>
+</body>
+</html>
