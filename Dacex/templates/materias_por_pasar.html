@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materias Por Pasar - DACEX</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-title">DACEX Menú</span>
+            <button class="close-btn" id="closeSidebar"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="{{ url_for('dashboard') }}"><i class="fa-solid fa-house"></i> Inicio / Perfil</a></li>
+                <li><a href="{{ url_for('oferta') }}"><i class="fa-solid fa-book-open"></i> Oferta académica</a></li>
+                <li><a href="{{ url_for('materias_pasadas') }}"><i class="fa-solid fa-circle-check"></i> Materias pasadas</a></li>
+                <li><a href="{{ url_for('materias_por_pasar') }}"><i class="fa-solid fa-clock"></i> Materias por pasar</a></li>
+                <li><a href="{{ url_for('pensum') }}"><i class="fa-solid fa-graduation-cap"></i> Pensum académico</a></li>
+                <li><a href="{{ url_for('estado_inscripcion') }}"><i class="fa-solid fa-clipboard-list"></i> Estado de inscripción</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <header class="navbar">
+        <div class="navbar-left"><button class="menu-btn" id="openSidebar"><i class="fa-solid fa-bars"></i></button></div>
+        <div class="navbar-center"><span class="brand-name">DACEX</span></div>
+        <div class="navbar-right">
+            <div class="index-badge">
+                <span class="index-title">ÍNDICE ACADÉMICO</span>
+                <div class="index-number"><i class="fa-solid fa-star"></i><span>{{ indice }}</span></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container content-page">
+        <div class="page-card">
+            <h2><i class="fa-solid fa-clock"></i> Materias Por Cursar</h2>
+            <p class="subtitle">Asignaturas pendientes de {{ carrera }}</p>
+
+            {% if materias %}
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre de la Materia</th>
+                                <th>Créditos</th>
+                                <th>Nivel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for m in materias %}
+                            <tr>
+                                <td><span class="badge-code">{{ m['codigo'] }}</span></td>
+                                <td>{{ m['nombre'] }}</td>
+                                <td>{{ m['creditos'] }} cr.</td>
+                                <td>{{ m['ano'] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="no-data">¡Felicidades! Has completado todas las materias de tu pensum.</p>
+            {% endif %}
+        </div>
+    </main>
+
+    <a href="/logout" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span></a>
+
+    <script>
+        const openBtn = document.getElementById('openSidebar');
+        const closeBtn = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function toggleMenu() { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); }
+        openBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+    </script>
+</body>
+</html>

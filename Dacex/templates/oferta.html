@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferta Académica - DACEX</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .counter-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .counter-badge {
+            font-size: 18px;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+        .btn-submit {
+            background: #22c55e;
+            color: #fff;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-submit:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .badge-cupo {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .cupo-bajo { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .cupo-medio { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-title">DACEX Menú</span>
+            <button class="close-btn" id="closeSidebar"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="{{ url_for('dashboard') }}"><i class="fa-solid fa-house"></i> Inicio / Perfil</a></li>
+                <li><a href="{{ url_for('oferta') }}"><i class="fa-solid fa-book-open"></i> Oferta académica</a></li>
+                <li><a href="{{ url_for('materias_pasadas') }}"><i class="fa-solid fa-circle-check"></i> Materias pasadas</a></li>
+                <li><a href="{{ url_for('materias_por_pasar') }}"><i class="fa-solid fa-clock"></i> Materias por pasar</a></li>
+                <li><a href="{{ url_for('pensum') }}"><i class="fa-solid fa-graduation-cap"></i> Pensum académico</a></li>
+                <li><a href="{{ url_for('estado_inscripcion') }}"><i class="fa-solid fa-clipboard-list"></i> Estado de inscripción</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <header class="navbar">
+        <div class="navbar-left"><button class="menu-btn" id="openSidebar"><i class="fa-solid fa-bars"></i></button></div>
+        <div class="navbar-center"><span class="brand-name">DACEX</span></div>
+        <div class="navbar-right">
+            <div class="index-badge">
+                <span class="index-title">ÍNDICE ACADÉMICO</span>
+                <div class="index-number"><i class="fa-solid fa-star"></i><span>{{ indice }}</span></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container content-page">
+        <div class="page-card">
+            <h2><i class="fa-solid fa-book-open"></i> Oferta Académica e Inscripción</h2>
+            <p class="subtitle">Selecciona las materias que cursarás. Las vacantes se actualizan dinámicamente según la demanda de los alumnos.</p>
+
+            {% if error %}
+                <div class="alert-error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</div>
+            {% endif %}
+
+            {% if inscritas %}
+                <div style="background: rgba(34, 197, 94, 0.15); border: 1px solid #22c55e; padding: 20px; border-radius: 8px; margin-top: 15px;">
+                    <h3 style="color: #22c55e; margin-bottom: 8px;"><i class="fa-solid fa-circle-check"></i> ¡Inscripción Completada!</h3>
+                    <p style="color: #e2e8f0;">Ya has realizado la inscripción de tu trimestre. Puedes verificar tus asignaturas en la sección <strong>Estado de Inscripción</strong>.</p>
+                    <a href="{{ url_for('estado_inscripcion') }}" class="btn-submit" style="display: inline-block; margin-top: 12px; text-decoration: none;">Ver Estado de Inscripción</a>
+                </div>
+            {% else %}
+
+                {% if materias %}
+                    <form action="{{ url_for('oferta') }}" method="POST" id="formInscripcion">
+                        <div class="counter-box">
+                            <div>
+                                <span style="color: #94a3b8; font-size: 14px;">Materias seleccionadas:</span>
+                                <div class="counter-badge"><span id="countText">0</span> / 4 <small style="font-size: 12px; color: #94a3b8; font-weight: normal;">(Mínimo 3, Máximo 4)</small></div>
+                            </div>
+                            <button type="submit" id="btnSubmit" class="btn-submit" disabled>
+                                <i class="fa-solid fa-check"></i> Confirmar e Inscribir
+                            </button>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px; text-align: center;">Elegir</th>
+                                        <th>Código</th>
+                                        <th>Materia</th>
+                                        <th>Créditos</th>
+                                        <th>Cupos Libres</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for m in materias %}
+                                    <tr>
+                                        <td style="text-align: center;">
+                                            <input type="checkbox" name="materias" value="{{ m['id'] }}" class="materia-checkbox"
+                                                   data-cupos="{{ m['cupos_disponibles'] }}"
+                                                   {% if m['cupos_disponibles'] <= 0 %}disabled{% endif %} style="width: 18px; height: 18px; cursor: pointer;">
+                                        </td>
+                                        <td><span class="badge-code">{{ m['codigo'] }}</span></td>
+                                        <td><strong>{{ m['nombre'] }}</strong></td>
+                                        <td>{{ m['creditos'] }} cr.</td>
+                                        <td>
+                                            {% if m['cupos_disponibles'] <= 2 %}
+                                                <span class="badge-cupo cupo-bajo"><i class="fa-solid fa-fire"></i> ¡Últimos {{ m['cupos_disponibles'] }} cupos!</span>
+                                            {% else %}
+                                                <span class="badge-cupo cupo-medio"><i class="fa-solid fa-users"></i> {{ m['cupos_disponibles'] }} / {{ m['cupos_max'] }} disponibles</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                {% else %}
+                    <p class="no-data">No se encontraron materias disponibles en la oferta para tu nivel actual.</p>
+                {% endif %}
+
+            {% endif %}
+        </div>
+    </main>
+
+    <a href="/logout" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span></a>
+
+    <script>
+        const openBtn = document.getElementById('openSidebar');
+        const closeBtn = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function toggleMenu() { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); }
+        openBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+
+        // Control dinámico de checkboxes (Min 3, Max 4)
+        const checkboxes = document.querySelectorAll('.materia-checkbox');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const countText = document.getElementById('countText');
+
+        function updateSelection() {
+            const selected = document.querySelectorAll('.materia-checkbox:checked');
+            const total = selected.length;
+            
+            countText.textContent = total;
+
+            // Activar/Desactivar botón según la regla de [3, 4]
+            if (total >= 3 && total <= 4) {
+                btnSubmit.disabled = false;
+            } else {
+                btnSubmit.disabled = true;
+            }
+
+            // Bloquear más selecciones si llega a 4
+            checkboxes.forEach(cb => {
+                if (!cb.checked) {
+                    if (total >= 4 || parseInt(cb.dataset.cupos) <= 0) {
+                        cb.disabled = true;
+                    } else {
+                        cb.disabled = false;
+                    }
+                }
+            });
+        }
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateSelection);
+        });
+    </script>
+</body>
+</html>

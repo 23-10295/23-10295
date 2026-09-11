@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DACEX - Inscripción de Materias</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="brand">
+            <h1>DACEX</h1>
+            <p>Control de Estudios e Inscripción</p>
+        </div>
+
+        {% if error %}
+            <div class="alert-error">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form action="/" method="POST">
+            <div class="form-group">
+                <label for="tipo_usuario">Tipo de Usuario:</label>
+                <select id="tipo_usuario" name="tipo_usuario" onchange="cambiarPlaceholder()">
+                    <option value="estudiante">Estudiante</option>
+                    <option value="admin">Administrador</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="username" id="label-carnet">Carnet Institucional:</label>
+                <input type="text" id="username" name="username" placeholder="Ej: 21-10234" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+            </div>
+            
+            <button type="submit" class="btn">Ingresar</button>
+        </form>
+    </div>
+
+    <script>
+        function cambiarPlaceholder() {
+            const tipo = document.getElementById('tipo_usuario').value;
+            const input = document.getElementById('username');
+            const label = document.getElementById('label-carnet');
+            
+            if (tipo === 'admin') {
+                label.textContent = 'Usuario Administrador:';
+                input.placeholder = 'Ej: admin';
+            } else {
+                label.textContent = 'Carnet Institucional:';
+                input.placeholder = 'Ej: 21-10234';
+            }
+        }
+    </script>
+</body>
+</html>

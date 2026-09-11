@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estado de Inscripción - DACEX</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-title">DACEX Menú</span>
+            <button class="close-btn" id="closeSidebar"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="{{ url_for('dashboard') }}"><i class="fa-solid fa-house"></i> Inicio / Perfil</a></li>
+                <li><a href="{{ url_for('oferta') }}"><i class="fa-solid fa-book-open"></i> Oferta académica</a></li>
+                <li><a href="{{ url_for('materias_pasadas') }}"><i class="fa-solid fa-circle-check"></i> Materias pasadas</a></li>
+                <li><a href="{{ url_for('materias_por_pasar') }}"><i class="fa-solid fa-clock"></i> Materias por pasar</a></li>
+                <li><a href="{{ url_for('pensum') }}"><i class="fa-solid fa-graduation-cap"></i> Pensum académico</a></li>
+                <li><a href="{{ url_for('estado_inscripcion') }}"><i class="fa-solid fa-clipboard-list"></i> Estado de inscripción</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <header class="navbar">
+        <div class="navbar-left"><button class="menu-btn" id="openSidebar"><i class="fa-solid fa-bars"></i></button></div>
+        <div class="navbar-center"><span class="brand-name">DACEX</span></div>
+        <div class="navbar-right">
+            <div class="index-badge">
+                <span class="index-title">ÍNDICE ACADÉMICO</span>
+                <div class="index-number"><i class="fa-solid fa-star"></i><span>{{ indice }}</span></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container content-page">
+        <div class="page-card">
+            <h2><i class="fa-solid fa-clipboard-list"></i> Comprobante de Inscripción</h2>
+            <p class="subtitle">Estatus académico actual y materias formalmente inscritas</p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; margin-bottom: 30px;">
+                <div style="background: #0f172a; padding: 20px; border-radius: 8px; border: 1px solid #334155;">
+                    <span style="color: #94a3b8; font-size: 13px;">Estatus Académico</span>
+                    <h3 style="color: #22c55e; margin-top: 6px;">
+                        {% if materias_inscritas %}INSCRITO Y ACTIVO{% else %}PENDIENTE DE INSCRIPCIÓN{% endif %}
+                    </h3>
+                </div>
+                <div style="background: #0f172a; padding: 20px; border-radius: 8px; border: 1px solid #334155;">
+                    <span style="color: #94a3b8; font-size: 13px;">Año de Carrera</span>
+                    <h3 style="color: #38bdf8; margin-top: 6px;">Año {{ usuario['ano_actual'] }}</h3>
+                </div>
+                <div style="background: #0f172a; padding: 20px; border-radius: 8px; border: 1px solid #334155;">
+                    <span style="color: #94a3b8; font-size: 13px;">Materias Inscritas</span>
+                    <h3 style="color: #f8fafc; margin-top: 6px;">{{ materias_inscritas|length }} asignaturas</h3>
+                </div>
+                <div style="background: #0f172a; padding: 20px; border-radius: 8px; border: 1px solid #334155;">
+                    <span style="color: #94a3b8; font-size: 13px;">Créditos Aprobados</span>
+                    <h3 style="color: #f8fafc; margin-top: 6px;">{{ stats['creditos_aprobados'] }} créditos</h3>
+                </div>
+            </div>
+
+            <h3><i class="fa-solid fa-list-check"></i> Materias Cursando en el Trimestre Actual</h3>
+
+            {% if materias_inscritas %}
+                <div class="table-responsive" style="margin-top: 15px;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre de la Materia</th>
+                                <th>Créditos</th>
+                                <th>Nivel</th>
+                                <th>Estatus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for m in materias_inscritas %}
+                            <tr>
+                                <td><span class="badge-code">{{ m['codigo'] }}</span></td>
+                                <td><strong>{{ m['nombre'] }}</strong></td>
+                                <td>{{ m['creditos'] }} cr.</td>
+                                <td>{{ m['ano'] }}</td>
+                                <td><span style="background: rgba(34, 197, 94, 0.2); color: #22c55e; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;">EN CURSO</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div style="background: #0f172a; border: 1px dashed #334155; padding: 30px; text-align: center; border-radius: 8px; margin-top: 15px;">
+                    <p style="color: #94a3b8; margin-bottom: 15px;">Aún no has inscrito materias para este período académico.</p>
+                    <a href="{{ url_for('oferta') }}" class="btn-submit" style="text-decoration: none; display: inline-block;">Ir a Oferta Académica</a>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <a href="/logout" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span></a>
+
+    <script>
+        const openBtn = document.getElementById('openSidebar');
+        const closeBtn = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function toggleMenu() { sidebar.classList.toggle('active'); overlay.classList.toggle('active'); }
+        openBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+    </script>
+</body>
+</html>
