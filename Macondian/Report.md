@@ -32,7 +32,7 @@ muestreo.
 
 ## Por qué está separado en su propio archivo
 
-El algoritmo vive en Sintesis.ts, separado del resto, detrás de un tipo
+El algoritmo vive en Macondo.ts, separado del resto, detrás de un tipo
 bien simple: entra el arreglo de lecturas y el radio, sale el macondo. Así
 si la agencia trae su propio modelo lo podemos probar o cambiar sin tocar
 nada más del sistema.
