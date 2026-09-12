@@ -1,0 +1,29 @@
+::zilly+
+sys.reset();
+
+Z => Z fibo := fn(Z n) -> if(n < 2, n, fibo(n - 1) + fibo(n - 2));
+
+Z => Z sfib := fn(Z k) -> if(k < 0, 0, sfib(k - 1) + fibo(k));
+
+Z => Z zfib := fn(Z n) -> fibo(n + 1) + fibo(n) - 1;
+
+fibo(0)
+fibo(1)
+fibo(2)
+fibo(3)
+fibo(4)
+fibo(5)
+
+sfib(0)
+sfib(1)
+sfib(2)
+sfib(3)
+sfib(4)
+sfib(5)
+
+zfib(0)
+zfib(1)
+zfib(2)
+zfib(3)
+zfib(4)
+zfib(5)
